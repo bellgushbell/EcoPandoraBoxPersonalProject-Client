@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      fredericka: ['"Fredericka the Great"', 'cursive'],
+    },
   },
   plugins: [],
 }
+
