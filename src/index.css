@@ -13,3 +13,13 @@ body {
 html {
     font-family: 'Poppins', sans-serif;
 }
+
+
+.swal2-custom-image {
+    width: 350px !important;
+    /* ความกว้าง */
+    height: 350px !important;
+    /* ความสูง */
+    object-fit: contain;
+
+}

@@ -8,6 +8,7 @@ import CampaignsPage from "../pages/CampaignsPage";
 import PaymentPage from "../pages/PaymentPage";
 import PaymentSuccess from "../components/DonatePayment/PaymentSuccess";
 import BoxRandomItemPage from "../pages/BoxRandomItemPage";
+import AddressDeliveryPage from "../pages/AddressDeliveryPage";
 
 
 const MainRouter = createBrowserRouter([
@@ -21,6 +22,7 @@ const MainRouter = createBrowserRouter([
             { path: "payment", element: <PaymentPage /> },
             { path: "payment-success", element: <PaymentSuccess /> },
             { path: "randombox", element: <BoxRandomItemPage /> },
+            { path: "address", element: <AddressDeliveryPage /> },
             { path: "*", element: <PageNotFound /> },
             { path: '/unauthorization', element: <Unauthorization /> },
 
@@ -35,6 +37,7 @@ const MainRouter = createBrowserRouter([
             { path: "campaigns", element: <ProtectRouter element={<CampaignsPage />} reqRole={'USER'} /> },
             { path: "payment", element: <PaymentPage /> },
             { path: "payment-success", element: <PaymentSuccess /> },
+            { path: "address", element: <AddressDeliveryPage /> },
             { path: "randombox", element: <BoxRandomItemPage /> },
         ]
 

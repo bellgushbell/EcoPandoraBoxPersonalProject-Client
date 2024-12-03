@@ -1,6 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import useUserStore from "../../stores/user-store"; // Import Zustand store
 
 function Login({ isOpen, onClose }) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const login = useUserStore((state) => state.login); // ดึงฟังก์ชัน login
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            await login({ email, password }); // ส่งข้อมูลไปยังฟังก์ชัน login
+            alert("Login successful!");
+            onClose(); // ปิด modal
+        } catch (error) {
+            alert("Login failed. Please check your credentials.");
+            console.error("Login error:", error.response?.data || error.message);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -13,21 +30,27 @@ function Login({ isOpen, onClose }) {
                     &times;
                 </button>
                 <h2 className="text-3xl font-bold mb-6 text-white text-center">Log In</h2>
-                <form>
+                <form onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label className="block mb-2 text-sm font-bold text-white">Email</label>
                         <input
                             type="email"
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-white"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="text-black w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-white"
                             placeholder="Enter your email"
+                            required
                         />
                     </div>
                     <div className="mb-6">
                         <label className="block mb-2 text-sm font-bold text-white">Password</label>
                         <input
                             type="password"
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-white"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="text-black w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-white"
                             placeholder="Enter your password"
+                            required
                         />
                     </div>
                     <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full shadow-md transition-transform transform hover:scale-105">

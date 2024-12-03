@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useDonationStore from "../../stores/useDonationStore"; // ดึง Zustand store
+import { useNavigate } from "react-router-dom";
 
 const API = import.meta.env.VITE_API;
 
@@ -12,6 +13,7 @@ function Box3D({ campaignImageUrl }) {
     const meshRef = useRef();
     const lidRef = useRef();
     const [isOpened, setIsOpened] = useState(false);
+    const navigate = useNavigate();
 
     // โหลด texture ของกล่อง
     const texture = new THREE.TextureLoader().load(campaignImageUrl);
@@ -60,7 +62,7 @@ function Box3D({ campaignImageUrl }) {
         }
     });
 
-    const handleOpen = () => {
+    const handleOpen = async () => {
         if (!isOpened) {
             gsap.to(meshRef.current.position, {
                 y: "+=0.2",
@@ -68,6 +70,15 @@ function Box3D({ campaignImageUrl }) {
                 yoyo: true,
                 repeat: 3,
             });
+
+            // ดึง totalPrice จาก Zustand
+            const totalPrice = useDonationStore.getState().totalPrice;
+            // เรียก API เพื่อดึงข้อมูลไอเท็มแบบสุ่ม โดยส่ง totalPrice ผ่าน body
+            const response = await axios.post(`${API}/randomitems/getitem`, {
+                totalPrice, // ส่งใน body
+            });
+
+            const { name, description, image } = response.data;
 
             // เปิดฝา (เลื่อนขึ้นและหมุนออก)
             gsap.to(lidRef.current.position, {
@@ -82,17 +93,24 @@ function Box3D({ campaignImageUrl }) {
                 onComplete: () => {
                     setIsOpened(true);
                     Swal.fire({
-                        title: "Custom width, padding, color, background.",
                         width: 600,
                         padding: "3em",
                         color: "#716add",
-                        background: "#fff url(/images/trees.png)",
-                        imageUrl: "https://media.giphy.com/media/26AHONQ79FdWZhAI0/giphy.gif", // URL ของไฟล์ GIF
-                        imageAlt: "GIF not loaded",
+                        background: "#fffff",
+                        title: name,
+                        text: description,
+                        imageUrl: image,
+                        customClass: {
+                            image: "swal2-custom-image", // คลาสนี้สำหรับปรับขนาดรูปภาพ
+                        },
+                        imageAlt: "RandomItem",
+                        allowOutsideClick: false, // ห้ามปิดเมื่อคลิกข้างนอก
                         confirmButtonText: "Continue",
                         willOpen: () => {
                             // เพิ่ม CSS แบบกำหนดเองให้กับ Swal
                             const swalContainer = Swal.getPopup().parentNode;
+
+
 
                             // กำหนด background-image หลายตำแหน่ง
                             swalContainer.style.backgroundImage = `
@@ -105,6 +123,10 @@ function Box3D({ campaignImageUrl }) {
                             swalContainer.style.backgroundRepeat = "no-repeat, no-repeat, no-repeat, no-repeat";
                             swalContainer.style.backgroundSize = "300px 300px, 300px 300px, 300px 300px, 300px 300px";
                         },
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigate("/address"); // Navigate ไปยังหน้า Address เมื่อกดปุ่ม
+                        }
                     });
 
 
