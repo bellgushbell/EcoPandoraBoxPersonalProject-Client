@@ -1,10 +1,6 @@
 import useSocketStore from "../../stores/socket-store";
 import { useShallow } from "zustand/shallow";
 
-/**
- * SidebarChatAdmin: แสดงรายการห้องแชทในรูปแบบ Sidebar
- * - ให้แอดมินเลือกห้องแชทเพื่อดูเนื้อหา
- */
 export default function SidebarChatAdmin({ chatBoxList }) {
     const { chatRoom, setChatBox } = useSocketStore(
         useShallow((state) => ({
@@ -12,16 +8,22 @@ export default function SidebarChatAdmin({ chatBoxList }) {
             setChatBox: state.setChatBox,
         }))
     );
+    const socket = useSocketStore((state) => state.socket);
 
     const handleChatClick = (id) => {
         if (chatRoom && chatRoom.id === id) return; // หากเลือกห้องเดิม ไม่ทำอะไร
         setChatBox(id); // เปลี่ยนห้องแชทที่เลือก
+
+        // แจ้ง Backend ว่าแอดมินเปลี่ยนห้อง
+        if (socket) {
+            socket.emit("adminJoinChat", id);
+        }
     };
 
     return (
         <div
             className="w-1/4 bg-white p-4 border-r border-gray-300 overflow-y-auto rounded-md shadow-md"
-            style={{ maxHeight: "600px" }} // กำหนดความสูงสูงสุด
+            style={{ maxHeight: "600px" }}
         >
             <h2 className="text-lg font-semibold border-b border-gray-300 mb-4">Recent Chats</h2>
             <div className="flex flex-col gap-4 pb-8">
@@ -48,8 +50,12 @@ export default function SidebarChatAdmin({ chatBoxList }) {
             </div>
         </div>
     );
-
 }
+
+
+
+
+
 
 
 
@@ -61,10 +67,6 @@ export default function SidebarChatAdmin({ chatBoxList }) {
 // import useSocketStore from "../../stores/socket-store";
 // import { useShallow } from "zustand/shallow";
 
-// /**
-//  * SidebarChatAdmin: แสดงรายการห้องแชทในรูปแบบ Sidebar
-//  * - ให้แอดมินเลือกห้องแชทเพื่อดูเนื้อหา
-//  */
 // export default function SidebarChatAdmin({ chatBoxList }) {
 //     const { chatRoom, setChatBox } = useSocketStore(
 //         useShallow((state) => ({
@@ -72,16 +74,22 @@ export default function SidebarChatAdmin({ chatBoxList }) {
 //             setChatBox: state.setChatBox,
 //         }))
 //     );
+//     const socket = useSocketStore((state) => state.socket);
 
 //     const handleChatClick = (id) => {
 //         if (chatRoom && chatRoom.id === id) return; // หากเลือกห้องเดิม ไม่ทำอะไร
 //         setChatBox(id); // เปลี่ยนห้องแชทที่เลือก
+
+//         // แจ้ง Backend ว่าแอดมินเปลี่ยนห้อง
+//         if (socket) {
+//             socket.emit("adminJoinChat", id);
+//         }
 //     };
 
 //     return (
 //         <div
 //             className="w-1/4 bg-white p-4 border-r border-gray-300 overflow-y-auto rounded-md shadow-md"
-//             style={{ maxHeight: "600px" }} // กำหนดความสูงสูงสุด
+//             style={{ maxHeight: "600px" }}
 //         >
 //             <h2 className="text-lg font-semibold border-b border-gray-300 mb-4">Recent Chats</h2>
 //             <div className="flex flex-col gap-4 pb-8">
@@ -108,8 +116,12 @@ export default function SidebarChatAdmin({ chatBoxList }) {
 //             </div>
 //         </div>
 //     );
-
 // }
+
+
+
+
+
 
 
 

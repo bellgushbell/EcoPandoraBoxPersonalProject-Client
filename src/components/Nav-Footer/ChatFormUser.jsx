@@ -29,18 +29,14 @@ export default function ChatFormUser() {
                 });
 
                 const socketId = socketRef.current?.id;
-                console.log("Socket ID being sent to API:", socketId);
 
                 const { data: chatBoxData } = await axios.get(`${API}/chathistory/history/getchatBoxId`, {
                     params: { socketId },
                     headers: { Authorization: `Bearer ${token || ""}` },
                 });
 
-                console.log("ChatBox ID Response:", chatBoxData);
-
                 setChatBoxId(chatBoxData.chatBoxId);
 
-                // หากมี Token ให้ดึงประวัติแชท
                 if (token) {
                     const { data: chatHistory } = await axios.get(
                         `${API}/chathistory/history/${chatBoxData.chatBoxId}`,
@@ -76,30 +72,34 @@ export default function ChatFormUser() {
             setMessages((prev) => [...prev, data.data]);
         });
 
+        // ฟังอีเวนต์ messagesRead สำหรับอัปเดต isRead
+        const handleMessagesRead = ({ chatBoxId }) => {
+            if (chatBoxId === chatBoxId) {
+                setMessages((prevMessages) =>
+                    prevMessages.map((msg) => ({
+                        ...msg,
+                        isRead: true,
+                    }))
+                );
+            }
+        };
+
+        socket.on("messagesRead", handleMessagesRead);
+
         socket.emit("joinChat");
 
         return () => {
+            socket.off("messagesRead", handleMessagesRead);
             socket.disconnect();
         };
     }, [token]);
 
-    // Scroll ภายในแชทไปยังข้อความล่าสุดล่างสุด ตอนรีเฟรซจอ เมื่อเปิดแชท 
+    // Scroll ไปยังข้อความล่าสุดเมื่อเปิดแชทหรือมีข้อความใหม่
     useEffect(() => {
         if (chatBoxRef.current) {
             chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
-    }, [isOpen]);
-
-
-    // Scrollbar ไปยังข้อความล่าสุด ตอนรีเฟรซ
-    useEffect(() => {
-        if (chatBoxRef.current) {
-            chatBoxRef.current.scrollTo({
-                top: chatBoxRef.current.scrollHeight, // เลื่อนลงไปยังตำแหน่งล่างสุด
-                behavior: "smooth", // เพิ่มความลื่นไหล
-            });
-        }
-    }, [messages]);
+    }, [isOpen, messages]);
 
     const handleSendMessage = () => {
         if (socketRef.current && input.trim()) {
@@ -139,6 +139,18 @@ export default function ChatFormUser() {
                                             }`}
                                     >
                                         {msg.message}
+                                        <span className="text-xs text-gray-500 block">
+                                            {new Date(msg.createdAt).toLocaleTimeString("en-US", {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: true,
+                                            })}
+                                        </span>
+                                        {msg.isRead ? (
+                                            <span className="text-green-500 text-xs">✓ Read</span>
+                                        ) : (
+                                            <span className="text-gray-400 text-xs">✓ Sent</span>
+                                        )}
                                     </div>
                                 </div>
                             ))
@@ -166,6 +178,16 @@ export default function ChatFormUser() {
         </div>
     );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,18 +235,14 @@ export default function ChatFormUser() {
 //                 });
 
 //                 const socketId = socketRef.current?.id;
-//                 console.log("Socket ID being sent to API:", socketId);
 
 //                 const { data: chatBoxData } = await axios.get(`${API}/chathistory/history/getchatBoxId`, {
 //                     params: { socketId },
 //                     headers: { Authorization: `Bearer ${token || ""}` },
 //                 });
 
-//                 console.log("ChatBox ID Response:", chatBoxData);
-
 //                 setChatBoxId(chatBoxData.chatBoxId);
 
-//                 // หากมี Token ให้ดึงประวัติแชท
 //                 if (token) {
 //                     const { data: chatHistory } = await axios.get(
 //                         `${API}/chathistory/history/${chatBoxData.chatBoxId}`,
@@ -260,30 +278,34 @@ export default function ChatFormUser() {
 //             setMessages((prev) => [...prev, data.data]);
 //         });
 
+//         // ฟังอีเวนต์ messagesRead สำหรับอัปเดต isRead
+//         const handleMessagesRead = ({ chatBoxId }) => {
+//             if (chatBoxId === chatBoxId) {
+//                 setMessages((prevMessages) =>
+//                     prevMessages.map((msg) => ({
+//                         ...msg,
+//                         isRead: true,
+//                     }))
+//                 );
+//             }
+//         };
+
+//         socket.on("messagesRead", handleMessagesRead);
+
 //         socket.emit("joinChat");
 
 //         return () => {
+//             socket.off("messagesRead", handleMessagesRead);
 //             socket.disconnect();
 //         };
 //     }, [token]);
 
-//     // Scroll ภายในแชทไปยังข้อความล่าสุดล่างสุด ตอนรีเฟรซจอ เมื่อเปิดแชท
+//     // Scroll ไปยังข้อความล่าสุดเมื่อเปิดแชทหรือมีข้อความใหม่
 //     useEffect(() => {
 //         if (chatBoxRef.current) {
 //             chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
 //         }
-//     }, [isOpen]);
-
-
-//     // Scrollbar ไปยังข้อความล่าสุด ตอนรีเฟรซ
-//     useEffect(() => {
-//         if (chatBoxRef.current) {
-//             chatBoxRef.current.scrollTo({
-//                 top: chatBoxRef.current.scrollHeight, // เลื่อนลงไปยังตำแหน่งล่างสุด
-//                 behavior: "smooth", // เพิ่มความลื่นไหล
-//             });
-//         }
-//     }, [messages]);
+//     }, [isOpen, messages]);
 
 //     const handleSendMessage = () => {
 //         if (socketRef.current && input.trim()) {
@@ -323,6 +345,18 @@ export default function ChatFormUser() {
 //                                             }`}
 //                                     >
 //                                         {msg.message}
+//                                         <span className="text-xs text-gray-500 block">
+//                                             {new Date(msg.createdAt).toLocaleTimeString("en-US", {
+//                                                 hour: "2-digit",
+//                                                 minute: "2-digit",
+//                                                 hour12: true,
+//                                             })}
+//                                         </span>
+//                                         {msg.isRead ? (
+//                                             <span className="text-green-500 text-xs">✓ Read</span>
+//                                         ) : (
+//                                             <span className="text-gray-400 text-xs">✓ Sent</span>
+//                                         )}
 //                                     </div>
 //                                 </div>
 //                             ))
@@ -350,6 +384,16 @@ export default function ChatFormUser() {
 //         </div>
 //     );
 // }
+
+
+
+
+
+
+
+
+
+
 
 
 

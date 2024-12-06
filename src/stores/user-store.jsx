@@ -18,6 +18,7 @@ const useUserStore = create(
             },
             logout: () => {
                 set({ token: '', user: null });
+                window.location.reload();
             },
             register: async (body) => {
                 await axios.post(`${API}/auth/register`, body);
