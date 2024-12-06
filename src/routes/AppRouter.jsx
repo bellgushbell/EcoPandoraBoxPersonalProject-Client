@@ -9,6 +9,9 @@ import PaymentPage from "../pages/PaymentPage";
 import PaymentSuccess from "../components/DonatePayment/PaymentSuccess";
 import BoxRandomItemPage from "../pages/BoxRandomItemPage";
 import AddressDeliveryPage from "../pages/AddressDeliveryPage";
+import PrepareForShippingPage from "../pages/PrepareForShippingPage";
+import HomeAdminPage from "../pages/Admin/HomeAdminPage";
+import DashboardAdmin from "../components/Admin/DashboardAdmin";
 
 
 const MainRouter = createBrowserRouter([
@@ -23,6 +26,7 @@ const MainRouter = createBrowserRouter([
             { path: "payment-success", element: <PaymentSuccess /> },
             { path: "randombox", element: <BoxRandomItemPage /> },
             { path: "address", element: <AddressDeliveryPage /> },
+            { path: "prepareforshipping", element: <PrepareForShippingPage /> },
             { path: "*", element: <PageNotFound /> },
             { path: '/unauthorization', element: <Unauthorization /> },
 
@@ -37,11 +41,26 @@ const MainRouter = createBrowserRouter([
             { path: "campaigns", element: <ProtectRouter element={<CampaignsPage />} reqRole={'USER'} /> },
             { path: "payment", element: <PaymentPage /> },
             { path: "payment-success", element: <PaymentSuccess /> },
-            { path: "address", element: <AddressDeliveryPage /> },
             { path: "randombox", element: <BoxRandomItemPage /> },
+            { path: "address", element: <AddressDeliveryPage /> },
+            { path: "prepareforshipping", element: <PrepareForShippingPage /> },
         ]
 
-    }
+    }, {
+        path: "/admin",
+        element: <ProtectRouter element={<HomeAdminPage />} reqRole={["ADMIN"]} />,
+        children: [
+            { index: true, element: <DashboardAdmin /> },
+            { path: "campaigns", element: <ProtectRouter /> },
+            { path: "payment", element: <PaymentPage /> },
+            { path: "payment-success", element: <PaymentSuccess /> },
+            { path: "randombox", element: <BoxRandomItemPage /> },
+            { path: "address", element: <AddressDeliveryPage /> },
+            { path: "prepareforshipping", element: <PrepareForShippingPage /> },
+        ]
+
+    },
+
 
 
 

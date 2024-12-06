@@ -12,7 +12,7 @@ function WhyDonateSection() {
     }, []);
 
     return (
-        <div className="relative bg-gradient-to-br from-green-400 via-green-500 to-green-700 text-white py-20 px-8">
+        <div id="why-donate" className="relative bg-gradient-to-br from-green-400 via-green-500 to-green-700 text-white py-20 px-8">
             {/* Decorative Background Circle */}
             <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-green-200 to-green-500 blur-3xl opacity-30 rounded-full -z-10"></div>
             <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-br from-green-300 to-green-600 blur-3xl opacity-30 rounded-full -z-10"></div>
@@ -59,7 +59,7 @@ function WhyDonateSection() {
                 </div>
 
                 {/* Gift Box Section */}
-                <div className="mt-20">
+                <div id="rewardtier" className="mt-20">
                     <h2 className="text-5xl md:text-4xl font-extrabold text-center">
                         🎁 Reward Boxes for Every Donation
                     </h2>

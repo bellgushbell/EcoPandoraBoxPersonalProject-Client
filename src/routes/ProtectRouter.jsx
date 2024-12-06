@@ -17,6 +17,8 @@ export default function ProtectRouter(props) {
             if (token) {
                 const result = await getMe();
                 const role = result.user.role;
+                console.log(role)
+                console.log(result)
                 if (reqRole.includes(role)) {
                     return setIsAllow(true);
                 }

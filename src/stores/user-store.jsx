@@ -23,7 +23,7 @@ const useUserStore = create(
                 await axios.post(`${API}/auth/register`, body);
             },
             // current user
-            getme: async () => {
+            getMe: async () => {
                 const { token } = useUserStore.getState();
                 if (!token) throw new Error('please Login');
                 const result = await axios.get(`${API}/auth/user`, {

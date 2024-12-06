@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import BoxGallery from "./BoxGallery";
+import { useNavigate } from "react-router-dom";
 
 function CameraZoomIn() {
     const { camera } = useThree();
+
 
     useEffect(() => {
         // ตั้งค่าให้กล้องซูมเข้าหาวัตถุ (ลดค่า z)
@@ -24,6 +26,7 @@ function CameraZoomIn() {
 }
 
 function HomepageSlide() {
+    const navigate = useNavigate()
     return (
         <div
             className="w-full h-[500px] bg-cover bg-center relative"
@@ -59,7 +62,7 @@ function HomepageSlide() {
 
             {/* ปุ่มบริจาค */}
             <div className="absolute bottom-5 left-0 w-full text-center">
-                <button className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg shadow-lg transition-transform transform hover:scale-105 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <button onClick={() => navigate("/campaigns")} className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg shadow-lg transition-transform transform hover:scale-105 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                     บริจาคเลย
                 </button>
             </div>

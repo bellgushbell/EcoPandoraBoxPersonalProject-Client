@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useUserStore from "../../stores/user-store"; // Import Zustand store
+import { toast } from "react-toastify";
 
 function Login({ isOpen, onClose }) {
     const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ function Login({ isOpen, onClose }) {
             alert("Login successful!");
             onClose(); // ปิด modal
         } catch (error) {
-            alert("Login failed. Please check your credentials.");
+            toast.error("Login failed. Please check your credentials.");
             console.error("Login error:", error.response?.data || error.message);
         }
     };

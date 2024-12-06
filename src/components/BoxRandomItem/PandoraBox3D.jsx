@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import useDonationStore from "../../stores/useDonationStore"; // ดึง Zustand store
 import { useNavigate } from "react-router-dom";
+import useReceivedItemStore from "../../stores/ReceivedItemStore";
 
 const API = import.meta.env.VITE_API;
 
@@ -77,8 +78,13 @@ function Box3D({ campaignImageUrl }) {
             const response = await axios.post(`${API}/randomitems/getitem`, {
                 totalPrice, // ส่งใน body
             });
+            const { randomItem, receivedItemId } = response.data;
 
-            const { name, description, image } = response.data;
+            const { name, description, image } = randomItem;
+
+            // เก็บ receivedItemId ใน Zustand
+            const setReceivedItemId = useReceivedItemStore.getState().setReceivedItemId;
+            setReceivedItemId(receivedItemId); // บันทึกลง Zustand
 
             // เปิดฝา (เลื่อนขึ้นและหมุนออก)
             gsap.to(lidRef.current.position, {
@@ -177,7 +183,7 @@ export default function SingleBox3D() {
     return (
         <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Canvas camera={{ position: [0, 2, 5], fov: 50 }}>
-                <ambientLight intensity={0.5} />
+                <ambientLight intensity={1.5} />
                 <directionalLight position={[5, 5, 5]} />
                 <Box3D campaignImageUrl={campaignImageUrl} />
             </Canvas>
