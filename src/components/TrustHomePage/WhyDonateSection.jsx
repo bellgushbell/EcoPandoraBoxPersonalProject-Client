@@ -72,7 +72,7 @@ function WhyDonateSection() {
                         {/* Tier 1 */}
                         <div className="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg backdrop-blur-md transform hover:scale-105 transition-transform duration-300">
                             <img
-                                src="https://images.pexels.com/photos/318665/pexels-photo-318665.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                src="https://img.freepik.com/free-vector/various-reusable-eco-bags-bottles-set_74855-7922.jpg"
                                 alt="10 THB Gift"
                                 className="w-24 h-24 mx-auto mb-6"
                             />
@@ -83,7 +83,7 @@ function WhyDonateSection() {
                         {/* Tier 2 */}
                         <div className="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg backdrop-blur-md transform hover:scale-105 transition-transform duration-300">
                             <img
-                                src="https://images.pexels.com/photos/2072168/pexels-photo-2072168.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSemUuQnNfUfE2qHCqGqTk5UUcnt_mf3FbDzg&s"
                                 alt="100 THB Gift"
                                 className="w-24 h-24 mx-auto mb-6"
                             />
@@ -94,18 +94,18 @@ function WhyDonateSection() {
                         {/* Tier 3 */}
                         <div className="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg backdrop-blur-md transform hover:scale-105 transition-transform duration-300">
                             <img
-                                src="https://images.pexels.com/photos/1493324/pexels-photo-1493324.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                src="https://cf.shopee.co.th/file/th-11134207-7r990-lxqihqkw5wi72a"
                                 alt="1,000 THB Gift"
                                 className="w-24 h-24 mx-auto mb-6"
                             />
                             <h3 className="text-3xl font-semibold mb-4">1,000 THB</h3>
-                            <p className="text-lg leading-relaxed">Premium items like bamboo cutlery sets.</p>
+                            <p className="text-lg leading-relaxed">Premium items like solar-powered power bank.</p>
                         </div>
 
                         {/* Tier 4 */}
                         <div className="bg-white bg-opacity-10 p-8 rounded-2xl shadow-lg backdrop-blur-md transform hover:scale-105 transition-transform duration-300">
                             <img
-                                src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                src="https://hips.hearstapps.com/hmg-prod/images/cannondale-adventure-neo-ebike-034-66ccd3f6b8f43.jpg?crop=0.770xw:0.824xh;0.131xw,0.106xh&resize=980:*"
                                 alt="10,000 THB Gift"
                                 className="w-24 h-24 mx-auto mb-6"
                             />
