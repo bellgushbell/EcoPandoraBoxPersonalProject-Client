@@ -6,6 +6,7 @@ import slidebarpic from "/assets/slideright.gif";
 import useDonationStore from "../../stores/useDonationStore";
 import useUserStore from "../../stores/user-store";
 import { useNavigate } from "react-router-dom";
+import Paymentloading from "../Loading/Paymentloading";
 
 const API = import.meta.env.VITE_API;
 
@@ -27,7 +28,6 @@ export default function CheckoutForm() {
         e.preventDefault();
         if (!stripe || !elements) return;
 
-        setIsLoading(true);
         setErrorMessage("");
 
         try {
@@ -35,6 +35,8 @@ export default function CheckoutForm() {
                 elements: elements,
                 redirect: "if_required",
             });
+
+            setIsLoading(true);
 
             if (error) {
                 setErrorMessage(error.message);
@@ -56,6 +58,7 @@ export default function CheckoutForm() {
 
                 await axios.post(`${API}/payment/success`, payload);
                 console.log("Payment success recorded in backend!");
+                setIsLoading(false);
                 navigate("/payment-success");
             } else {
                 throw new Error("Payment not completed.");
@@ -84,7 +87,14 @@ export default function CheckoutForm() {
             setIsSubmit(false);
         }
     };
-
+    // เช็คสถานะโหลดดิ้ง
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <Paymentloading /> {/* แสดงโหลดดิ้ง */}
+            </div>
+        );
+    }
     return (
         <motion.form
             initial={{ opacity: 0 }}

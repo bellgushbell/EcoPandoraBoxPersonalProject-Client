@@ -12,6 +12,10 @@ import AddressDeliveryPage from "../pages/AddressDeliveryPage";
 import PrepareForShippingPage from "../pages/PrepareForShippingPage";
 import HomeAdminPage from "../pages/Admin/HomeAdminPage";
 import DashboardAdmin from "../components/Admin/DashboardAdmin";
+import ShippingManage from "../components/Admin/ShippingManagePage/ShippingManage";
+import AdminAddItem from "../components/Admin/AdminAddItem/AdminAddItem";
+import AdminMemberManage from "../components/Admin/AdminMemberManage/AdminMemberManage";
+import AdminItemManage from "../components/Admin/AdminItemManage/AdminItemManage";
 
 
 const MainRouter = createBrowserRouter([
@@ -51,6 +55,13 @@ const MainRouter = createBrowserRouter([
         element: <ProtectRouter element={<HomeAdminPage />} reqRole={["ADMIN"]} />,
         children: [
             { index: true, element: <DashboardAdmin /> },
+            { path: "dashboard", element: <DashboardAdmin /> },
+            { path: "shipping-manage", element: <ShippingManage /> },
+            { path: "add-random-item", element: <AdminAddItem /> },
+            { path: "user-manage", element: <AdminMemberManage /> },
+            { path: "items-manage", element: <AdminItemManage /> },
+
+
             { path: "campaigns", element: <ProtectRouter /> },
             { path: "payment", element: <PaymentPage /> },
             { path: "payment-success", element: <PaymentSuccess /> },

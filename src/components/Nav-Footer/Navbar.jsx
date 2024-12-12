@@ -4,6 +4,8 @@ import useUserStore from "../../stores/user-store";
 import axios from "axios";
 import Login from "../../components/Login-Register/Login.jsx";
 import Register from "../../components/Login-Register/Register.jsx";
+import Uploadloading from "../Loading/UploadProfileLoading.jsx"
+import Swal from "sweetalert2";
 
 const API = import.meta.env.VITE_API;
 
@@ -17,11 +19,14 @@ function Navbar() {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
 
         try {
+            setIsLoading(true)
             const formData = new FormData();
             formData.append("avatar", file);
 
@@ -36,13 +41,56 @@ function Navbar() {
                 useUserStore.setState((state) => ({
                     user: { ...state.user, profileImage: response.data.avatarUrl },
                 }));
-                alert("Avatar updated successfully!");
+                // success alert
+                Swal.fire({
+                    html: `<div class="flex items-center gap-2">
+               <img src="/public/assets/success-green.gif" alt="Success" class="w-14 h-14" />
+               <span style="font-size: 16px; font-weight: bold; color: green;">Picture Upload Success</span>
+             </div>`,
+                    position: "top-end",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    toast: true,
+                    background: "#ffffff",
+                    didOpen: (toast) => {
+                        const progressBar = toast.querySelector(".swal2-timer-progress-bar");
+                        if (progressBar) {
+                            progressBar.style.backgroundColor = "green";
+                        }
+                        toast.addEventListener("click", Swal.close);
+                    },
+                });
             }
         } catch (error) {
             console.error("Error uploading avatar:", error);
-            alert("Failed to upload avatar");
+            const errMsg = error.response?.data?.message || error.message;
+            //alert error
+            Swal.fire({
+                html: `<div class="flex items-center gap-2">
+           <img src="/public/assets/fail-red.gif" alt="Error Animation" class="w-10 h-10" />
+           <span style="font-size: 16px; font-weight: bold; color: red;">${errMsg}</span>
+         </div>`,
+                position: "top-end",
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                toast: true,
+                background: "#ffffff",
+                didOpen: (toast) => {
+                    const progressBar = toast.querySelector(".swal2-timer-progress-bar");
+                    if (progressBar) {
+                        progressBar.style.backgroundColor = "#f44336";
+                    }
+                    toast.addEventListener("click", Swal.close);
+                },
+            })
+
+        } finally {
+            setIsLoading(false);
         }
     };
+
 
     // ฟังก์ชันสำหรับเลื่อนหน้าจอไปยัง "Why Donate with Us?"
     const scrollToWhyDonate = () => {
@@ -59,7 +107,7 @@ function Navbar() {
             section.scrollIntoView({ behavior: "smooth" });
         }
     };
-
+    console.log(user)
 
     return (
         <nav className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 text-white py-4 px-6 shadow-md">
@@ -100,6 +148,13 @@ function Navbar() {
                             Reward Tiers
                         </button>
                     </li>
+                    {user?.role == "ADMIN" && (
+                        <li>
+                            <a href="/admin" className="hover:text-gray-300 text-yellow-300">
+                                Admin
+                            </a>
+                        </li>
+                    )}
                 </ul>
 
                 {/* Avatar, Guest หรือปุ่ม Login/Sign Up */}
@@ -136,15 +191,21 @@ function Navbar() {
                                     </div>
                                     <ul>
                                         <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                                            <label className="cursor-pointer block text-center">
-                                                Upload Avatar
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    className="hidden"
-                                                    onChange={handleFileChange}
-                                                />
-                                            </label>
+                                            {isLoading ? (
+                                                <div className="flex justify-center">
+                                                    <Uploadloading /> {/* แสดงโหลดดิ้งเฉพาะส่วนอัปโหลด */}
+                                                </div>
+                                            ) : (
+                                                <label className="cursor-pointer block text-center">
+                                                    Upload Avatar
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={handleFileChange}
+                                                    />
+                                                </label>
+                                            )}
                                         </li>
                                         <li className="px-4 py-2 hover:bg-red-600 bg-red-500 text-white text-center cursor-pointer rounded">
                                             <button onClick={() => logout()}>

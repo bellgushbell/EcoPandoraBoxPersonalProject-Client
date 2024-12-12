@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useUserStore from "../../stores/user-store"; // Import Zustand store
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+
 
 function Login({ isOpen, onClose }) {
     const [email, setEmail] = useState("");
@@ -11,11 +12,51 @@ function Login({ isOpen, onClose }) {
         e.preventDefault();
         try {
             await login({ email, password }); // ส่งข้อมูลไปยังฟังก์ชัน login
-            alert("Login successful!");
-            onClose(); // ปิด modal
+            // alert("Login successful!");
+            //success alert
+            Swal.fire({
+                html: `<div class="flex items-center gap-2">
+           <img src="/public/assets/success-green.gif" alt="Success" class="w-14 h-14" />
+           <span style="font-size: 16px; font-weight: bold; color: green;">Register Success</span>
+         </div>`,
+                position: "top-end",
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                toast: true,
+                background: "#ffffff",
+                didOpen: (toast) => {
+                    const progressBar = toast.querySelector(".swal2-timer-progress-bar");
+                    if (progressBar) {
+                        progressBar.style.backgroundColor = "green";
+                    }
+                    toast.addEventListener("click", Swal.close);
+                },
+            });
+            onClose(); // ปิด modal 
+
         } catch (error) {
-            toast.error("Login failed. Please check your credentials.");
-            console.error("Login error:", error.response?.data || error.message);
+            const errMsg = error.response?.data?.message || error.message;
+            //alert error
+            Swal.fire({
+                html: `<div class="flex items-center gap-2">
+           <img src="/public/assets/fail-red.gif" alt="Error Animation" class="w-10 h-10" />
+           <span style="font-size: 16px; font-weight: bold; color: red;">${errMsg}</span>
+         </div>`,
+                position: "top-end",
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                toast: true,
+                background: "#ffffff",
+                didOpen: (toast) => {
+                    const progressBar = toast.querySelector(".swal2-timer-progress-bar");
+                    if (progressBar) {
+                        progressBar.style.backgroundColor = "#f44336";
+                    }
+                    toast.addEventListener("click", Swal.close);
+                },
+            });
         }
     };
 
